@@ -89,7 +89,6 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
         
         const { data } = await axios.get(`/api/users/${id}`, config)
 
-        //REGISTER USER AND THEN LOG IN
         dispatch({
             type: USER_DETAILS_SUCCESS,
             payload: data
