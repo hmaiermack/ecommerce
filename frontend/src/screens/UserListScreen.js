@@ -4,21 +4,34 @@ import { Table, Button} from 'react-bootstrap'
 import { useDispatch, useSelector} from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { listUsers } from '../actions/userActions'
+import { listUsers, deleteUser } from '../actions/userActions'
 
 
-const UserListScreen = () => {
+const UserListScreen = ( {history }) => {
     const dispatch = useDispatch()
 
     const userList = useSelector(state => state.userList)
     const { loading, error, users } = userList
+    
+    const userLogin = useSelector(state => state.userLogin)
+    const { userInfo } = userLogin
+
+    const userDelete = useSelector(state => state.userDelete)
+    const { success: successDelete } = userDelete
 
     useEffect(() => {
-        dispatch(listUsers())
-    }, [dispatch])
+        if(userInfo && userInfo.isAdmin){
+            dispatch(listUsers())
+        } else {
+            history.pushState('/login')
+        }
+    }, [dispatch, history, userInfo, successDelete])
 
     const deleteHandler = (id) => {
-        console.log('delete')
+        let { name } = users.filter(user => user._id === id)[0]
+        if(window.confirm(`Are you sure you want to delete user ${name}`)){
+            dispatch(deleteUser(id))
+        }
     }
     
 
@@ -43,7 +56,7 @@ const UserListScreen = () => {
                                 <td>{user.name}</td>
                                 <td><a href={`mailto:${user.email}`}>{user.email}</a></td>
                                 <td>
-                                    {user.isAdmin ? (<icon className='fas fa-check' style={{color: 'gren'}} />) : (
+                                    {user.isAdmin ? (<i className='fas fa-check' style={{color: 'gren'}} />) : (
                                         <i className='fas fa-times' style={{color: 'red'}} />
                                     )}
                                 </td>
