@@ -5,6 +5,11 @@ import Product from '../models/productModel.js'
 //@route GET /api/products
 //@access Public
 const getProducts = asyncHandler(async (req, res) => {
+    //number of items per 'page'
+    const pagination = 5
+    //get current page from query or default to 1
+    const page = Number(req.query.pageNumber) || 1
+
     const search = req.query.search ? {
         name: {
             $regex: req.query.search,
@@ -12,9 +17,13 @@ const getProducts = asyncHandler(async (req, res) => {
         }
     } : {}
 
-    const products = await Product.find({ ...search })
+    //get total number of products
+    const count = await Product.countDocuments({ ...search })
+    //limit products to number of items per page(.limit(pagination)), and then determine which index to start query at(.skip(pagination * (page-1)))
+    const products = await Product.find({ ...search }).limit(pagination).skip(pagination * (page-1))
 
-    res.json(products)
+    //return products, current page, and total number of pages
+    res.json({ products, page, pages: Math.ceil(count / pagination)})
 })
 
 //@desc Fetch single product
