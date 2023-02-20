@@ -1,8 +1,6 @@
 # ecommerce
 Ecommerce app built on the MERN stack with all of the features you'd expect: user registration and authentication, ability to look at products and add to cart, 
 ability to submit an order and pay for it through the PayPal API, add and delete products as an admin, user profile updates, searching, pagination and more.
-
-## [Live Demo](https://mackcommerce.herokuapp.com/)
 ![screenshot](screenshot.jpg)
 
 ## Setup
